@@ -10,7 +10,8 @@ class Person {
   name;
 
   constructor(age:number, name: String){
-
+    this.name=name;
+    this.age=age;
   }
 
   getSummary(){
@@ -18,3 +19,6 @@ class Person {
 
   }
 }
+
+const dj = new Person(37, 'Dario');
+ dj.getSummary();
