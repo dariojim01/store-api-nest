@@ -1,7 +1,24 @@
-import { Controller, Param, Get, Query } from '@nestjs/common';
+import { Controller,
+  Param,
+  Get,
+  Query,
+  Post,
+  Body,
+  Put,
+  Delete,
+  HttpStatus,
+  HttpCode
+ } from '@nestjs/common';
+import { AnyARecord } from 'dns';
+import { ProductsService } from 'src/services/products.service';
+
+import { CreateProductDto, UpdateProductDto } from 'src/dtos/products.dtos';
+
 
 @Controller('products')
 export class ProductsController {
+
+  constructor(private productService: ProductsService){}
 
   @Get()
   getProducts(
@@ -9,7 +26,10 @@ export class ProductsController {
     @Query('offset') offset = 0,
     @Query('brand') brand: string,
     ){
-    return `product limit is: ${limit} and offset is: ${offset} and brand is: ${brand}`;
+    //return {
+    //  message: `product limit is: ${limit} and offset is: ${offset} and brand is: ${brand}`,
+    //};
+    return this.productService.findAll();
   }
 
 
@@ -19,7 +39,36 @@ export class ProductsController {
   }
 
   @Get(':productId')
+  @HttpCode(HttpStatus.ACCEPTED)
   getProduct(@Param('productId') productId: string){
-    return `product ${productId}`;
+    //return {
+     // message:`product ${productId}`,
+
+    //};
+    return this.productService.findOne(+productId);
+  }
+
+  @Post()
+  create(@Body() payload: CreateProductDto){
+    //return {
+    //  message: 'action for create',
+    //  payload,
+    //};
+    return this.productService.create(payload);
+  }
+
+  @Put(':id')
+  update(@Param('id') id: number, @Body() payload: UpdateProductDto){
+    //return {
+     // id,
+     // payload
+   // };
+
+   return this.productService.update(+id, payload);
+  }
+
+  @Delete(':productId')
+  deleteProduct(@Param('productId') productId: string){
+    return this.productService.delete(+productId);
   }
 }
